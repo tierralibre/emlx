@@ -16,6 +16,9 @@ defmodule EMLX.Nx.LinalgTest do
   # - lu: MLX raises on singular matrices (doctest uses [[1,2,3],[4,5,6],[7,8,9]])
   # - qr: sign convention differences (-0.0 vs 0.0) and float precision
   # - svd: sign convention differences in U/Vt vectors
+  # - matrix_rank: MLX's native SVD returns small-but-nonzero trailing
+  #   singular values (e.g. 0.00104 where LAPACK gives exactly 0.0), so the
+  #   eps-tolerance rank count over-counts on rank-deficient inputs
   @rounding_error [
     norm: 2,
     matrix_power: 2,
@@ -28,7 +31,8 @@ defmodule EMLX.Nx.LinalgTest do
     solve: 2,
     eigh: 2,
     invert: 1,
-    pinv: 2
+    pinv: 2,
+    matrix_rank: 2
   ]
 
   doctest Nx.LinAlg, except: @not_implemented_yet ++ @rounding_error
